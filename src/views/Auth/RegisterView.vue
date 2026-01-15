@@ -1,8 +1,10 @@
 <script setup>
     
 import { useAuthStore } from '@/stores/auth';
+import { storeToRefs } from 'pinia';
 import { onMounted, reactive } from 'vue';
 
+const { errors } = storeToRefs(useAuthStore());
 const {authenticate} = useAuthStore();
 
 
@@ -26,14 +28,17 @@ onMounted(()=>(errors.value = {}));
       <div>
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" placeholder="John Doe"  v-model="formData.name"/>
+        <p v-if="errors.name">{{ errors.name }}</p>
       </div>
       <div>
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" placeholder="john@example.com" v-model="formData.email"/>
+        <p v-if="errors.email">{{ errors.email }}</p>
       </div>
       <div>
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" placeholder="password" v-model="formData.password" />
+        <p v-if="errors.password">{{ errors.password }}</p>
       </div>
       <div>
         <label for="confirm-password">Confirm Password:</label>

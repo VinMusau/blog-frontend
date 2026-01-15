@@ -1,18 +1,21 @@
 <script>
 
 import { onMounted, reactive } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+
+const {authenticate} = useAuthStore();
 
 
-   const formData = reactive({
-        email: '',
-        password: '',
-    });
+const formData = reactive({
+    email: '',
+    password: '',
+});
 
 onMounted(()=>(errors.value = {}));
 </script>
 
 <template>
-    <div class="register-view">
+    <div class="">
     <h1>Login</h1>
     <form 
         @submit.prevent="authenticate('login', formData)"
@@ -33,5 +36,6 @@ onMounted(()=>(errors.value = {}));
 
 
 <style>
+
 
 </style>
