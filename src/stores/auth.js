@@ -9,6 +9,7 @@ export const useAuthStore = defineStore('authStore', {
         }
     },
     actions: {
+
         async getUser(){
            if (localStorage.getItem('token')) {
                 const response = await fetch('/api/user', {
@@ -18,12 +19,13 @@ export const useAuthStore = defineStore('authStore', {
                     }
                 });
                 const data = await response.json();
-                this.user = data.user;
-           } else {
-            
-           }
+                if (response.ok) {
+                    this.user = data.user;
+                }
+                // console.log(data);
+           } 
         },
-
+        
         // Generic authenticate method for login and registration
         async authenticate(apiRoute, formData) {
             const response = await fetch(`/api/${apiRoute}`, { //the fetch will return a promise
@@ -43,6 +45,23 @@ export const useAuthStore = defineStore('authStore', {
                 this.$router.push({ name: 'home' });  //redirect to home after authentication
             } 
         },
+
+        async logout() {
+            const response = await fetch('/api/logout', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+
+            const data = await response.json();
+            console.log(data);
+            if (response.ok) {
+                this.user = null;
+                localStorage.removeItem('token');
+                this.$router.push({ name: 'login' }); //redirect to login after logout
+            }
+        }
     }
 
 })
