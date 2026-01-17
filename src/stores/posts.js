@@ -4,6 +4,7 @@ import { useAuthStore } from './auth';
 export const usePostsStore = defineStore('postsStore', {
     state: () => {
         return {
+            posts: [],
             errors: {},
 
         }
@@ -12,19 +13,31 @@ export const usePostsStore = defineStore('postsStore', {
     actions: {
         // fetching posts
         async fetchPosts() {
-            const response = await fetch('/api/posts/14', {
+            const response = await fetch('/api/posts');
+            const data = await response.json();
+            console.log(data);          
+            this.posts = data;
+        
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch posts');
+            }
+            console.log(data);          
+            return data.posts;
+        }, 
+
+        // fetching a single post
+        async fetchPost(id) {
+            const response = await fetch(`/api/posts/${id}`, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                 }
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to fetch posts');
-            }
-            const data = await response.json();
-            // console.log(data);          
-            return data.posts;
+            return await response.json();
+
+
         },
 
         // Create a new post

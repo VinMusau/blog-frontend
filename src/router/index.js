@@ -4,6 +4,7 @@ import RegisterView from '@/views/Auth/RegisterView.vue'
 import { useAuthStore } from '@/stores/auth'
 import LoginView from '@/views/Auth/LoginView.vue'
 import CreateView from '@/views/Posts/CreateView.vue'
+import ShowView from '@/views/Posts/ShowView.vue'
 
 const router = createRouter({
     history: createWebHistory( import.meta.env.BASE_URL ),
@@ -32,24 +33,27 @@ const router = createRouter({
         name: 'create',
         component: CreateView,
         meta: { requiresAuth: true }
-      }
+      },
+
+      {
+        path: '/posts/:id',
+        name: 'show',
+        component: ShowView,
+      },
 
 
     ]
 })
 
-/*
-let isAuthenticated = false;
 
-router.beforeEach( async ( to, from ) => {
+
+router.beforeEach(async (to, from ) => {
+  const authStore = useAuthStore();
       
-  if ( !isAuthenticated ) {
-    const authStore = useAuthStore();
+  if ( authStore.user === undefined ) {
     await authStore.getUser();
-    isAuthenticated = !!authStore.user;
   }
         
-  const authStore = useAuthStore();
 
   if ( authStore.user && to.meta.guest ) {
     return( { name: 'home' } );
@@ -57,11 +61,11 @@ router.beforeEach( async ( to, from ) => {
   
 
   if ( !authStore.user && to.meta.requiresAuth ) {
-    return( { name: 'login' } );
+    return( { name: 'login', query: { redirect: to.fullPath } } );
   }
 
 
 });
-*/
+
 
 export default router
