@@ -28,15 +28,11 @@ export const usePostsStore = defineStore('postsStore', {
 
         // fetching a single post
         async fetchPost(id) {
-            const response = await fetch(`/api/posts/${id}`, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                }
-            });
+            const response = await fetch(`/api/posts/${id}`);
+            const data = await response.json();
 
-            return await response.json();
-
+            console.log(data);
+            return data.post;
 
         },
 
