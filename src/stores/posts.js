@@ -15,7 +15,6 @@ export const usePostsStore = defineStore('postsStore', {
         async fetchPosts() {
             const response = await fetch('/api/posts');
             const data = await response.json();
-            console.log(data);          
             this.posts = data;
         
 
@@ -31,7 +30,6 @@ export const usePostsStore = defineStore('postsStore', {
             const response = await fetch(`/api/posts/${id}`);
             const data = await response.json();
 
-            console.log(data);
             return data.post;
 
         },
@@ -56,6 +54,58 @@ export const usePostsStore = defineStore('postsStore', {
                this.$router.push({ name: 'home' });
             }
 
-        }
-    },
+        },
+
+        // Delete a post
+        async deletePost(post) {
+            const authStore = useAuthStore();
+            if (authStore.user.id === post.user_id) {
+                const response = await fetch(`/api/posts/${post.id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    // Post deleted successfully
+                    this.$router.push({ name: 'home' });
+
+                }
+            }
+                
+
+            // Remove the deleted post from the state
+           // this.posts = this.posts.filter(post => post.id !== post);
+        },
+
+        
+        // edit a post
+        async editPost(post, formData) {
+            const authStore = useAuthStore();
+            if (authStore.user.id === post.user_id) {
+                const response = await fetch(`/api/posts/${post.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                const data = await response.json();
+                if (data.errors) {
+                    this.errors = data.errors;
+                } else {
+                    this.$router.push({ name: 'home' });
+                    this.errors = {};
+                }
+            }
+        },
+
+        
+
+
+    }
 });
