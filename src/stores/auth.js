@@ -9,6 +9,7 @@ export const useAuthStore = defineStore('authStore', {
         }
     },
     actions: {
+        // Fetch the authenticated user's data
 
         async getUser(){
            if (localStorage.getItem('token')) {
@@ -27,6 +28,7 @@ export const useAuthStore = defineStore('authStore', {
         },
         
         // Generic authenticate method for login and registration
+        /*
         async authenticate(apiRoute, formData) {
             const response = await fetch(`/api/${apiRoute}`, { //the fetch will return a promise
                 method: 'POST',
@@ -45,6 +47,42 @@ export const useAuthStore = defineStore('authStore', {
                 this.$router.push({ name: 'home' });  //redirect to home after authentication
             } 
         },
+        */
+
+        async login(formData) {
+            try{
+                const response = await fetch('/api/login', { //the fetch will return a promise
+                    method: 'POST',
+                    body: JSON.stringify(formData),
+                });
+
+                const token = response.data.token;
+                localStorage.setItem('token', token);
+
+                if (token) { 
+                    localStorage.setItem('token', token);
+                    this.$router.push({ name: 'home' });  //redirect to home after authentication
+                }
+                return response.data;
+            } catch (error) {
+                console.error('Login error:', error);
+                throw error;
+            }
+        },
+
+            /*
+            if (data.errors) {
+                this.errors = data.errors;
+            }
+            else {
+                this.errors = {};
+                localStorage.setItem('token', data.token);
+                this.user = data.user;
+
+                this.$router.push({ name: 'home' });  //redirect to home after authentication
+            }
+            */
+        
 
         async logout() {
             const response = await fetch('/api/logout', {
