@@ -27,27 +27,7 @@ export const useAuthStore = defineStore('authStore', {
            } 
         },
         
-        // Generic authenticate method for login and registration
-        /*
-        async authenticate(apiRoute, formData) {
-            const response = await fetch(`/api/${apiRoute}`, { //the fetch will return a promise
-                method: 'POST',
-                body: JSON.stringify(formData),
-            });
-            
-            const data = await response.json();
-            if (data.errors) {
-                this.errors = data.errors;           
-             }
-            else {
-                this.errors = {};
-                localStorage.setItem('token', data.token);
-                this.user = data.user;
-
-                this.$router.push({ name: 'home' });  //redirect to home after authentication
-            } 
-        },
-        */
+     
 
         async login(formData) {
             try{
@@ -70,18 +50,7 @@ export const useAuthStore = defineStore('authStore', {
             }
         },
 
-            /*
-            if (data.errors) {
-                this.errors = data.errors;
-            }
-            else {
-                this.errors = {};
-                localStorage.setItem('token', data.token);
-                this.user = data.user;
-
-                this.$router.push({ name: 'home' });  //redirect to home after authentication
-            }
-            */
+           
         
 
         async logout() {
