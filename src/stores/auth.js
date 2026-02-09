@@ -1,4 +1,6 @@
 import { defineStore } from 'pinia'
+import axios from 'axios'
+import { routes } from 'ziggy-js'
 
 export const useAuthStore = defineStore('authStore', {
     state: () => {
@@ -16,11 +18,12 @@ export const useAuthStore = defineStore('authStore', {
                 const response = await fetch('/api/user', {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                        'Accept': 'application/json'
                     }
                 });
-                const data = await response.json();
-                if (response.ok) {
+                if (response.ok) { 
+                    const data = await response.json();
                     this.user = data.user;
                 }
                 // console.log(data);
@@ -29,24 +32,20 @@ export const useAuthStore = defineStore('authStore', {
         
      
 
-        async login(formData) {
+        async authenticate(apiRoute, formData) {
             try{
-                const response = await fetch('/api/login', { //the fetch will return a promise
-                    method: 'POST',
-                    body: JSON.stringify(formData),
-                });
+                const response = await axios.post(`/api/${apiRoute}`, formData);
+                if (response.data.token) {
+                    localStorage.setItem('token', response.data.token);
+                    this.user = response.data.user;
 
-                const token = response.data.token;
-                localStorage.setItem('token', token);
-
-                if (token) { 
-                    localStorage.setItem('token', token);
-                    this.$router.push({ name: 'home' });  //redirect to home after authentication
+                    this.$router.push({ name: 'home' });
                 }
-                return response.data;
             } catch (error) {
-                console.error('Login error:', error);
-                throw error;
+                if (error.response?.data?.errors) {
+                    this.errors = error.response.data.errors;
+                }
+                console.error('Auth error:', error);
             }
         },
 

@@ -2,6 +2,8 @@ import './assets/main.css'
 
 import { createApp, markRaw } from 'vue'
 import { createPinia } from 'pinia'
+import { ZiggyVue } from 'ziggy-js';
+
 
 
 import App from './App.vue'
@@ -15,6 +17,7 @@ pinia.use(({ store }) => {
     store.$router = markRaw(router)
 })
 
+app.use(ZiggyVue)
 app.use(pinia)
 app.use(router)
 

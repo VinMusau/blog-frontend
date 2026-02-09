@@ -1,39 +1,45 @@
 <script setup>
-    
-import { storeToRefs } from 'pinia';
 import { onMounted, reactive } from 'vue';
+import { useAuthStore } from '@/stores/auth';
 
-const { errors } = storeToRefs(useAuthStore());
-const {authenticate} = useAuthStore();
-
+// 1. Just grab the whole store object
+const authStore = useAuthStore();
 
 const formData = reactive({
     email: '',
     password: '',
 });
 
-import { useAuthStore } from '@/stores/auth';
+// 2. Clear errors by reaching into the store directly
+onMounted(() => {
+    authStore.errors = {}; 
+});
 
-
-onMounted(()=>(errors.value = {})); // Clear errors on mount (trancation of errors)
+// 3. Create a local wrapper for the submit to keep it clean
+const handleLogin = async () => {
+    await authStore.authenticate('login', formData);
+};
 </script>
 
 <template>
   <div class="register-view">
     <h1>Welcome Back</h1>
     <form 
-        @submit.prevent="authenticate('login', formData)"
-        class="register-form space-y-4"
+        @submit.prevent="handleLogin" class="register-form space-y-4"
     >
       <div>
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" placeholder="john@example.com" v-model="formData.email"/>
-        <p v-if="errors.email" class="color">{{ errors.email[0] }}</p>
+        <p v-if="authStore.errors?.email" class="color">
+                {{ authStore.errors.email[0] }}
+        </p>     
       </div>
       <div>
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" placeholder="password" v-model="formData.password" />
-        <p v-if="errors.password" class="color">{{ errors.password[0] }}</p>
+        <p v-if="authStore.errors?.password" class="color">
+          {{ authStore.errors.password[0] }}
+        </p>
       </div>
       <button type="submit" class="primary-btn">Login</button>
     </form>
