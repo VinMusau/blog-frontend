@@ -1,18 +1,27 @@
 <script setup>
-    import { reactive } from 'vue';
-    import { onMounted } from 'vue';
+    import { reactive, onMounted } from 'vue';
     import { usePostsStore } from '@/stores/posts';
-    import { ref } from 'vue';
     import { storeToRefs } from 'pinia';
+    import { useCategoryStore } from '@/stores/categoryStore';
 
+    const categoryStore = useCategoryStore();
+    const postsStore = usePostsStore();
     const { errors } = storeToRefs(usePostsStore());
     const { createPost } = usePostsStore();
     const formData = reactive({
         title: '',
-        content: ''
+        content: '',
+        category_id: ''
     });
     
-    onMounted(() => { errors.value = {}; });
+    onMounted( async () => { 
+        console.log("Component Mounted");
+        postsStore.errors = {};
+
+        await categoryStore.fetchCategories();
+        console.log("Categories in store:", categoryStore.categories);
+    });
+
 </script>
 <template>
     <main>
@@ -24,6 +33,14 @@
                 <label for="title">Title</label>
                 <input type="text" id="title" name="title" placeholder="Post Title" v-model="formData.title" />
                 <p v-if="errors.title" class="color">{{ errors.title[0] }}</p>
+            </div>
+            <div class="category-badge">
+                <select v-model="formData.category_id">
+                    <option value="">select a category</option>
+                    <option v-for="cat in categoryStore.categories" :key="cat.id" :value="cat.id">
+                         {{ cat.name }}
+                    </option>
+                </select>
             </div>
             <div class="form-group">
                 <label for="content">Content</label>
@@ -88,6 +105,15 @@
         color: red;
         font-size: 14px;
         margin-top: 5px;
+    }
+    .category-badge {
+        background: #e2e8f0;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        color: #4a5568;
+        margin-bottom: 8px;
+        display: inline-block;
     }
 
 </style>

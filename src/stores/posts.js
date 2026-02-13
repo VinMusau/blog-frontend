@@ -5,6 +5,7 @@ export const usePostsStore = defineStore('postsStore', {
     state: () => {
         return {
             posts: [],
+            categories: [],
             errors: {},
 
         }
@@ -16,6 +17,7 @@ export const usePostsStore = defineStore('postsStore', {
             const response = await fetch('/api/posts');
             const data = await response.json();
             this.posts = data;
+            // this.posts = data.data || data;
         
 
             if (!response.ok) {
@@ -54,6 +56,14 @@ export const usePostsStore = defineStore('postsStore', {
                this.$router.push({ name: 'home' });
             }
 
+        },
+        // Get Categories
+        async fetchCategories() {
+            const response = await fetch(`/api/categories`);
+            const data  = await response.json();
+            console.log("Categories from API:", data);
+
+            this.categories = data;
         },
 
         // Delete a post
