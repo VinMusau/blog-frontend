@@ -5,3 +5,69 @@
 @tailwind components;
 @tailwind utilities;
 
+/* LIGHT THEME (Default) */
+:root {
+  --bg-main: #ffffff;
+  --text-main: #1a1a1a;
+  --card-bg: #f8f9fa;
+  --border: #e2e8f0;
+}
+
+/* DARK THEME */
+:root.dark {
+  --bg-main: #0f172a; /* Deep blue-black */
+  --text-main: #f8fafc;
+  --card-bg: #1e293b;
+  --border: #334155;
+}
+
+/* THE GLOBAL RESET */
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  transition: background-color 0.3s ease;
+  margin: 0;
+}
+
+/* Style the button to look flat and modern */
+.theme-btn {
+  background: none;
+  border: 1px solid var(--border);
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-btn:hover {
+  background-color: var(--border);
+}
+.filter-bar {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+  flex-wrap: wrap; /* Keeps it responsive on mobile */
+}
+
+.custom-select {
+  background-color: var(--card-bg);
+  color: var(--text-main);
+  border: 1px solid var(--border);
+  padding: 10px 15px;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.custom-select:focus {
+  border-color: #3b82f6; /* A nice blue highlight */
+}
+
+.search-bar {
+  flex-grow: 1; /* Makes the search bar take up the remaining space */
+  min-width: 200px;
+}
+

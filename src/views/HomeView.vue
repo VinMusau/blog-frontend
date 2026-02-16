@@ -3,7 +3,7 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { storeToRefs } from 'pinia';  
-import { onMounted, computed } from 'vue';
+import { onMounted, computed,ref } from 'vue';
 import { usePostsStore } from '@/stores/posts';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { RouterLink } from 'vue-router';
@@ -12,17 +12,27 @@ import { RouterLink } from 'vue-router';
 const postsStore = usePostsStore();
 const categoryStore = useCategoryStore();
 const { posts } = storeToRefs(postsStore);
+const searchQuery = ref('');
 dayjs.extend(relativeTime);
 
 const formatTime = (date) => {
   return dayjs(date).fromNow();
 };
 
+// computed propety acts as brain for seach and filter fns
 const filteredPosts = computed(()=>{
   if (!postsStore.selectedCategoryId) {
     return postsStore.posts; //this will return all posts if no category is selected
   }
-  return postsStore.posts.filter(post=>post.category_id === postsStore.selectedCategoryId);
+  //return postsStore.posts.filter(post=>post.category_id === postsStore.selectedCategoryId);
+
+  return postsStore.posts.filter(post => {
+    const matchesCategory = !postsStore.selectedCategoryId || post.category_id === postsStore.selectedCategoryId;
+
+    const matchesSearch = post.title.toLowerCase().includes(searchQuery.value.toLowerCase()) || post.content.toLowerCase().includes(searchQuery.value.toLowerCase());
+
+    return matchesCategory && matchesSearch;
+  })
 });
 
 onMounted(() =>  {
@@ -43,13 +53,16 @@ onMounted(() =>  {
           <option v-for="cat in categoryStore.categories" :key="cat.id" :value="cat.id">
             {{ cat.name }}
           </option>
+        </select>
           <input 
             type="text" 
             v-model="searchQuery" 
             placeholder="Search titles..." 
-            class="search-input"
+            class="custom-select search-bar"
           />
-        </select>
+          <button v-if="searchQuery" @click="searchQuery = ''" class="clear-btn">
+            &times;
+          </button>
       </div>
 
       <div class="post-feed">
@@ -92,9 +105,9 @@ onMounted(() =>  {
   }
 
   .filter-bar {
-    background: #f4f4f9;
+    background: var(--card-bg);
     padding: 15px;
-    border-radius: 8px;
+    border-radius: 1px solid var(--border-color);
     margin-bottom: 30px;
     display: flex;
     align-items: center;
@@ -102,9 +115,11 @@ onMounted(() =>  {
   }
 
   .custom-select {
+    background: var(--bg-color);
+    color: var(--text-color);
     padding: 8px;
     border-radius: 4px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
   }
 
   .post-card {
