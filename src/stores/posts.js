@@ -6,6 +6,7 @@ export const usePostsStore = defineStore('postsStore', {
         return {
             posts: [],
             categories: [],
+            selectedCategoryId: null,
             errors: {},
 
         }

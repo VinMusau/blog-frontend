@@ -5,7 +5,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* LIGHT THEME (Default) */
 :root {
   --bg-main: #ffffff;
   --text-main: #1a1a1a;
@@ -13,7 +12,6 @@
   --border: #e2e8f0;
 }
 
-/* DARK THEME */
 :root.dark {
   --bg-main: #0f172a; /* Deep blue-black */
   --text-main: #f8fafc;
@@ -21,7 +19,6 @@
   --border: #334155;
 }
 
-/* THE GLOBAL RESET */
 body {
   background-color: var(--bg-main);
   color: var(--text-main);
@@ -29,7 +26,6 @@ body {
   margin: 0;
 }
 
-/* Style the button to look flat and modern */
 .theme-btn {
   background: none;
   border: 1px solid var(--border);
@@ -49,7 +45,7 @@ body {
   display: flex;
   gap: 15px;
   margin-bottom: 25px;
-  flex-wrap: wrap; /* Keeps it responsive on mobile */
+  flex-wrap: wrap;
 }
 
 .custom-select {
@@ -63,11 +59,11 @@ body {
 }
 
 .custom-select:focus {
-  border-color: #3b82f6; /* A nice blue highlight */
+  border-color: #3b82f6; 
 }
 
 .search-bar {
-  flex-grow: 1; /* Makes the search bar take up the remaining space */
+  flex-grow: 1; 
   min-width: 200px;
 }
 
