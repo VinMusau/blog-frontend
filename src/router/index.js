@@ -6,6 +6,7 @@ import LoginView from '@/views/Auth/LoginView.vue'
 import CreateView from '@/views/Posts/CreateView.vue'
 import ShowView from '@/views/Posts/ShowView.vue'
 import EditView from '@/views/Posts/EditView.vue'
+import ProfileView from '@/views/Posts/ProfileView.vue'
 
 const router = createRouter({
     history: createWebHistory( import.meta.env.BASE_URL ),
@@ -46,6 +47,12 @@ const router = createRouter({
         name: 'edit',
         component: EditView,
         meta: { requiresAuth: true }
+      },
+      {
+        path: '/profile/:id',
+        name: 'profile',
+        component: ProfileView,
+        props: true // this lets us use id as a prop
       }
 
 

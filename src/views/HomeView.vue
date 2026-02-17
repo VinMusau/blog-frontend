@@ -86,7 +86,13 @@ onMounted(() =>  {
                </span>
             </div>
 
-            <p class="text-xs text-slate-600 mb-4">by {{ post.user.name }} • {{ formatTime(post.created_at) }}</p>
+            <p class="text-xs text-slate-600 mb-4">
+              by 
+                <RouterLink :to="{name: 'profile', params:{id:post.user_id}}">
+                  {{ post.user.name }} 
+                </RouterLink>
+                  • {{ formatTime(post.created_at) }}
+            </p>
         
             <p>{{ post.content }}
               <RouterLink :to="{ name: 'show', params: { id: post.id } }" class="text-blue-600 hover:underline"> Read more...</RouterLink>

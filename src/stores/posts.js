@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { useAuthStore } from './auth';  
+import axios from 'axios';
 
 export const usePostsStore = defineStore('postsStore', {
     state: () => {
@@ -7,6 +8,7 @@ export const usePostsStore = defineStore('postsStore', {
             posts: [],
             categories: [],
             selectedCategoryId: null,
+            userPosts: [],
             errors: {},
 
         }
@@ -114,6 +116,31 @@ export const usePostsStore = defineStore('postsStore', {
                 }
             }
         },
+
+        // getting posts by only a specific user
+        async fetchUserPosts(userId) {
+            this.loading= true;
+            try {
+                const response = await fetch(`/api/users/${userId}/posts`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept' : 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error (`Server responded with ${response.status}`);
+                }
+
+                const data = await response.json();
+                this.userPosts = data;
+            } catch (error) {
+                console.error("Fetch error:", error);
+            } finally {
+                this.loading = false;
+            }
+          
+        }
 
         
 
