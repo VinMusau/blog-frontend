@@ -48,8 +48,27 @@ export const useAuthStore = defineStore('authStore', {
                 console.error('Auth error:', error);
             }
         },
+        
+        async uploadAvatar(file) {
+            const formData = new formData();
+            formData.append('avatar', file);
 
-           
+            try {
+                const response = await fetch(`/api/user/avatar`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${this.token || localStorage.getItem('token')}`
+                    }
+                });
+                if (response.data.user) {
+                    this.user = response.data.user;
+                }
+                return response.data;
+            } catch (error) {
+                console.error("Avatar upload failed", error.response?.data)
+                throw error;
+            }
+        },
         
 
         async logout() {
