@@ -50,23 +50,41 @@ export const useAuthStore = defineStore('authStore', {
         },
         
         async uploadAvatar(file) {
-            const formData = new formData();
+            const formData = new FormData();
             formData.append('avatar', file);
 
             try {
-                const response = await fetch(`/api/user/avatar`, formData, {
+                const response = await fetch(`/api/user/avatar`, {
+                    method: 'POST',
                     headers: {
-                        'Content-Type': 'multipart/form-data',
-                        'Authorization': `Bearer ${this.token || localStorage.getItem('token')}`
-                    }
+                       // 'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${this.token || localStorage.getItem('token')}`,
+                        'Accept': 'application/json',
+                    },
+                    body: formData
                 });
-                if (response.data.user) {
-                    this.user = response.data.user;
+                if (!response.ok) {
+                    throw new Error (`Upload failed: ${response.status}`);
                 }
-                return response.data;
+                const data = await response.json();
+
+                if (data.user) {
+                    this.user = data.user
+                }
+                return data;
             } catch (error) {
                 console.error("Avatar upload failed", error.response?.data)
                 throw error;
+            }
+        },
+
+        // deleting the avatar
+        async deleteAvatar() {
+            try {
+                await axios.delete(`/api/user/avatar`);
+                this.user.avatar = null;
+            } catch (error) {
+                console.error("Failed to delete avatar", error);
             }
         },
         
