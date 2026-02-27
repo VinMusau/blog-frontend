@@ -6,6 +6,7 @@
 
   const authStore = useAuthStore();
   const isDark = ref(false);
+  const loading = ref(false);
 
   const toggleTheme = () => {
     isDark.value = !isDark.value;
@@ -29,6 +30,12 @@
     e.target.src = `https://ui-avatars.com/api/?name=Error&background=ccc&color=666`;
   };
 
+  const handleResend = async () => {
+    loading.value= true;
+    await authStore.resendVerification
+    loading.value= false;
+  };
+
   onMounted(() => {
     authStore.getUser();
     const savedTheme = localStorage.getItem('theme');
@@ -37,6 +44,12 @@
     if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
       isDark.value = true;
       document.documentElement.classList.add('dark');
+    }
+  });
+
+  onMounted(() => {
+    if ( route.query.verified === '1') {
+      showSuccessToast('Verification complete!')
     }
   });
 
@@ -80,6 +93,19 @@
       
   </nav>
   </header>
+
+
+  <div v-if="authStore.isLoggedIn && !authStore.isVerified" class="banner">
+    <p> Please verify your email </p>
+    <button 
+      @click="handleResend" :disabled="loading"
+      class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-3 py-1 rounded-md text-xs font-medium transition-colors"
+    >
+        {{ loading ? 'sending...' : 'Resend Email' }}
+    </button>
+
+  </div>
+  <slot />
 
 
   <div style="height: 20px;">

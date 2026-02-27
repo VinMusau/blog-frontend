@@ -10,6 +10,10 @@ export const useAuthStore = defineStore('authStore', {
             
         }
     },
+    getters: {
+        isVerified: (state) => !!state.user?.email_verified_at,
+        isLoggedIn: (state) => !!state.user
+    },
     actions: {
         // Fetch the authenticated user's data
 
@@ -49,6 +53,7 @@ export const useAuthStore = defineStore('authStore', {
             }
         },
         
+        // uploading an avatar
         async uploadAvatar(file) {
             const formData = new FormData();
             formData.append('avatar', file);
@@ -85,6 +90,18 @@ export const useAuthStore = defineStore('authStore', {
                 this.user.avatar = null;
             } catch (error) {
                 console.error("Failed to delete avatar", error);
+            }
+        },
+
+        //resending verification link
+        async resendVerification() {
+            try {
+                await fetch(`/email/verification-notification`), {
+                    method: 'POST'
+                }
+                return { success: true, message: 'Check your email for verification link'};
+            } catch (error) {
+                return { success: false, message: 'Failed to send'}
             }
         },
         
