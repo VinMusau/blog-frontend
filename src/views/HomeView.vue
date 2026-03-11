@@ -1,12 +1,15 @@
 <script setup>
 
 import dayjs from 'dayjs';
+import LikeButton from '@/components/LikeButton.vue';
+
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { storeToRefs } from 'pinia';  
 import { onMounted, computed,ref } from 'vue';
 import { usePostsStore } from '@/stores/posts';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { RouterLink } from 'vue-router';
+import AppFooter from '@/components/AppFooter.vue';
 
 // const { fetchPosts } = usePostsStore();
 const postsStore = usePostsStore();
@@ -97,11 +100,17 @@ onMounted(() =>  {
             <p>{{ post.content }}
               <RouterLink :to="{ name: 'show', params: { id: post.id } }" class="text-blue-600 hover:underline"> Read more...</RouterLink>
             </p>
+
+              <like-button :post="post" />
+
           </div>
         </div>
       </div> 
 
   </main>
+  <footer>  
+    <AppFooter />
+  </footer>
 </template>
 <style scoped>
   .title {

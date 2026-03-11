@@ -19,6 +19,8 @@ onMounted(() => {
 const handleLogin = async () => {
     await authStore.authenticate('login', formData);
 };
+
+
 </script>
 
 <template>

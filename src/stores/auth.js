@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import { routes } from 'ziggy-js'
 
 export const useAuthStore = defineStore('authStore', {
     state: () => {
@@ -52,6 +51,17 @@ export const useAuthStore = defineStore('authStore', {
                 console.error('Auth error:', error);
             }
         },
+
+        async login(formData) {
+            const res = await axios.post('/api/login', formData);
+            
+            if (res.data.token) {
+                localStorage.setItem('token', res.data.token);
+                // Manually set it for the very next request
+                axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
+                await this.getUser();
+            }
+        },
         
         // uploading an avatar
         async uploadAvatar(file) {
@@ -96,9 +106,12 @@ export const useAuthStore = defineStore('authStore', {
         //resending verification link
         async resendVerification() {
             try {
-                await fetch(`/email/verification-notification`), {
-                    method: 'POST'
-                }
+                await fetch(`/email/verification-notification`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                    }
+                })
                 return { success: true, message: 'Check your email for verification link'};
             } catch (error) {
                 return { success: false, message: 'Failed to send'}

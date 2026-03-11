@@ -22,6 +22,7 @@ onMounted(async()=> (post.value = await fetchPost(route.params.id)));
                 
                 <p>{{ post.content }}
                 </p>
+                
 
                 <div 
                     v-if="authStore.user && authStore.user.id === post.user.id"

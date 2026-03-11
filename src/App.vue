@@ -1,10 +1,11 @@
 <script setup>
   import { createPinia } from 'pinia';
-  import { RouterLink, RouterView } from 'vue-router'
+  import { RouterLink, RouterView, useRoute } from 'vue-router'
   import { useAuthStore } from './stores/auth';
   import { onMounted, ref, computed } from 'vue';
 
   const authStore = useAuthStore();
+  const route = useRoute();
   const isDark = ref(false);
   const loading = ref(false);
 
@@ -95,7 +96,7 @@
   </header>
 
 
-  <div v-if="authStore.isLoggedIn && !authStore.isVerified" class="banner">
+  <div v-if="authStore.isLoggedIn && !authStore.isVerified" class="bg-amber-50 border-b border-amber-200 text-amber-800 px-4 py-3 flex items-center justify-between shadow-sm sticky top-0 z-50">
     <p> Please verify your email </p>
     <button 
       @click="handleResend" :disabled="loading"
