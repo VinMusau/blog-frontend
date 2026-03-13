@@ -3,15 +3,23 @@ import { usePostsStore } from '@/stores/posts';
 import { useAuthStore } from '@/stores/auth';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { useCommentStore } from '@/stores/commentStore';
+import  CommentThread  from '@/components/CommentThread.vue';
 
 const route = useRoute();
 const authStore = useAuthStore();
+const commentStore = useCommentStore();
 const { fetchPost, deletePost } = usePostsStore();
 const post = ref(null)
 
-onMounted(async()=> (post.value = await fetchPost(route.params.id)));
-</script>
+onMounted(async()=> {
+    post.value = await fetchPost(route.params.id);
 
+    if (post.value) {
+        await commentStore.fetchComments(post.value.id);
+    }
+});
+</script>
 <template>
     <main>
         <div v-if="post"> 
@@ -38,6 +46,10 @@ onMounted(async()=> (post.value = await fetchPost(route.params.id)));
 
                 </div>
 
+            </div>
+
+            <div class="mt-10 pt-10 border-t border-slate-200">
+                <CommentThread :postId="post.id" />
             </div>
         </div>
 

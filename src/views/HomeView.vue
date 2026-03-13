@@ -2,6 +2,7 @@
 
 import dayjs from 'dayjs';
 import LikeButton from '@/components/LikeButton.vue';
+import CommentPill from '@/components/CommentPill.vue'; 
 
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { storeToRefs } from 'pinia';  
@@ -100,9 +101,10 @@ onMounted(() =>  {
             <p>{{ post.content }}
               <RouterLink :to="{ name: 'show', params: { id: post.id } }" class="text-blue-600 hover:underline"> Read more...</RouterLink>
             </p>
-
-              <like-button :post="post" />
-
+            <div class="flex items-center gap-4 mt-4">
+              <like-button :post="post" /> 
+              <CommentPill :postId="post.id" />
+            </div>
           </div>
         </div>
       </div> 
