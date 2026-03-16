@@ -8,7 +8,7 @@
       </div>
       <div class="bg-gray-50 rounded-lg p-3 flex-grow">
         <div class="flex justify-between items-center mb-1">
-          <span class="font-semibold text-sm">{{ comment.user.name }}</span>
+          <span class="font-semibold text-sm text-black-400">{{ comment.user.name }}</span>
           <span class="text-xs text-gray-400">{{ formatDate(comment.created_at) }}</span>
         </div>
         <p class="text-sm text-gray-700">{{ comment.body }}</p>

@@ -5,6 +5,8 @@ import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useCommentStore } from '@/stores/commentStore';
 import  CommentThread  from '@/components/CommentThread.vue';
+import CommentPill from '@/components/CommentPill.vue';
+import LikeButton from '@/components/LikeButton.vue';
 
 const route = useRoute();
 const authStore = useAuthStore();
@@ -44,6 +46,10 @@ onMounted(async()=> {
                             Edit Post
                         </router-link>
 
+                </div>
+                <div class="flex items-center gap-4 mt-4">
+                    <like-button :post="post" /> 
+                    <CommentPill :postId="post.id" />
                 </div>
 
             </div>
