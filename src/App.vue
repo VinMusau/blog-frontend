@@ -54,6 +54,12 @@
     }
   });
 
+  onMounted(() => {
+    if (localStorage.getItem('auth_token')) {
+      likeStore.loadLikes();
+    }
+  })
+
 </script>
 
 <template>
