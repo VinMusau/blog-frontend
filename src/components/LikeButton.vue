@@ -1,16 +1,14 @@
 <script setup>
 import { useLikeStore } from '@/stores/likeStore';
-import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 
 
 const props = defineProps({ post: Object });
-const store = useLikeStore();
 const likeStore = useLikeStore();
 
-const { likedPosts, loading } = storeToRefs(likeStore);
+// const { likedPosts, loading } = storeToRefs(likeStore);
 
-const isLiked = computed(() => likedPosts.value.has(props.post.id));
+const isLiked = computed(() => likeStore.isLiked(props.post.id));
 
 const handleToggle = async () => {
     try {

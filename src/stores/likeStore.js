@@ -7,6 +7,10 @@ export const useLikeStore = defineStore('likesStore', {
         loading: false,
     }),
 
+    getters: {
+        isLiked: (state) => (postId) => state.likedPosts.has(postId),
+    },
+
     actions: {
         async toggleLike(postId) {
             this.loading = true;
@@ -25,9 +29,15 @@ export const useLikeStore = defineStore('likesStore', {
         },
 
         async loadLikes() {
-            const { data } = await axios.get('/api/likes')
-            this.likedPosts = new Set(data.map(post => post.id))
-            this.likedPosts = data
+            this.loading = true;
+            try {
+                const { data } = await axios.get('/api/user/likes')
+                this.likedPosts = new Set(data);
+            } catch (error) {
+                console.error('Failed to load liked posts:', error);
+            } finally {
+                this.loading = false;
+            }
         }
     }
 })

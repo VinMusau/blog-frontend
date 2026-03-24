@@ -2,9 +2,11 @@
   import { createPinia } from 'pinia';
   import { RouterLink, RouterView, useRoute } from 'vue-router'
   import { useAuthStore } from './stores/auth';
+  import { useLikeStore } from './stores/likeStore';
   import { onMounted, ref, computed } from 'vue';
 
   const authStore = useAuthStore();
+  const likeStore = useLikeStore();
   const route = useRoute();
   const isDark = ref(false);
   const loading = ref(false);
@@ -37,28 +39,29 @@
     loading.value= false;
   };
 
-  onMounted(() => {
-    authStore.getUser();
+  onMounted(async () => {
+    await authStore.getUser();
+
     const savedTheme = localStorage.getItem('theme');
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
     if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
       isDark.value = true;
       document.documentElement.classList.add('dark');
     }
-  });
 
-  onMounted(() => {
-    if ( route.query.verified === '1') {
-      showSuccessToast('Verification complete!')
+    // Check if we have a user and a token
+    if (authStore.user && localStorage.getItem('auth_token')) {
+      console.log("App mounted: User found, loading likes...");
+      await likeStore.loadLikes();
+    }
+
+    if (route.query.verified === '1') {
+      showSuccessToast('Verification complete!');
     }
   });
 
-  onMounted(() => {
-    if (localStorage.getItem('auth_token')) {
-      likeStore.loadLikes();
-    }
-  })
+
+
 
 </script>
 
